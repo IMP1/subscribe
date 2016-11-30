@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+    <title><ruby> 
+        model.info.title 
+    </ruby></title>
+    <description><ruby> 
+        model.info.description 
+    </ruby></description>
+    <link>https://www.youtube.com/playlist?list=<ruby> 
+        model.info.playlist_id 
+    </ruby></link>
+    <lastBuildDate><ruby> 
+        model.info.last_update 
+    </ruby></lastBuildDate>
+    <pubDate><ruby> 
+        model.info.publication_datetime
+    </ruby></pubDate>
+    <ttl>1800</ttl>
+
+    <ruby> 
+        model.videos.map do |video|
+            "    <item>\n"
+          + "        <title>#{video.title}</title>"
+          + "        <description>#{video.description}</description>"
+          + "        <link>#{video.link}</link>"
+          + "        <guid isPermaLink=\"true\">#{video.id}</guid>"
+          + "        <pubDate>#{video.datetime}</pubDate>"
+          + "    <item>"
+        end.join("\n")
+    </ruby>
+
+</channel>
+</rss>
