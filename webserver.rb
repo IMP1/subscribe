@@ -21,6 +21,15 @@ class WebServer
 
     def initialize(port)
         @port = port
+        if File.exists?('keys/google_api')
+            @api_key = File.read('keys/google_api')
+        else
+            puts "Could not find 'keys/google_api' file."
+            puts "Please create a file (without an extension) in this location."
+            puts "This file should contain only your google api key."
+            system("pause")
+            exit(0)
+        end
     end
 
     def stop
@@ -91,10 +100,9 @@ class WebServer
 
     def playlist_model(playlist_id)
         model = Container.new
-        api_key = File.read('keys/google_api')
 
         uri = URI("https://www.googleapis.com/youtube/v3/playlistItems?" + 
-                  "part=snippet&maxResults=10&playlistId=#{playlist_id}&key=#{api_key}")
+                  "part=snippet&maxResults=10&playlistId=#{playlist_id}&key=#{@api_key}")
         response = Net::HTTP.get(uri)
         json = JSON.parse(response)
         playlist_data = json['items'][0]
@@ -109,7 +117,7 @@ class WebServer
         model.add('videos', [])
 
         uri = URI("https://www.googleapis.com/youtube/v3/playlistItems?" + 
-                  "part=snippet&maxResults=10&playlistId=#{playlist_id}&key=#{api_key}")
+                  "part=snippet&maxResults=10&playlistId=#{playlist_id}&key=#{@api_key}")
         response = Net::HTTP.get(uri)
         json = JSON.parse(response)
         playlist_items = json['items']
@@ -144,6 +152,7 @@ class WebServer
 
 end
 
+puts
 webserver = WebServer.new(2345)
 webserver.begin
 
